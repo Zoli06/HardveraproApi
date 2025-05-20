@@ -1,7 +1,7 @@
-﻿namespace HardveraproApi.Consts;
+﻿namespace HardveraproApi.Constants;
 
 public static class Routes
 {
-    private static Uri BaseUrl => new("https://hardverapro.hu/");
-    public static Uri SearchUrl => new(BaseUrl, "aprok/keres.php");
+    private static Uri Base => new("https://hardverapro.hu/");
+    public static Uri Search => new(Base, "aprok/keres.php");
 }

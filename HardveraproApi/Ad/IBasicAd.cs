@@ -1,9 +1,11 @@
-﻿namespace HardveraproApi.Ad;
+﻿using HardveraproApi.User;
 
-public interface BasicAd
+namespace HardveraproApi.Ad;
+
+public interface IBasicAd
 {
-    string Title;
-    public int Price;
-    public string Description;
-    public string[] ImageUrls;
+    public string Title { get; }
+    public int? Price { get; }
+    public Uri CoverImage { get; }
+    public IBasicUser Seller { get; }
 }
