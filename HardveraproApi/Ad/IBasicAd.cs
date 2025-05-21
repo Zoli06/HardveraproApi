@@ -8,4 +8,7 @@ public interface IBasicAd
     public int? Price { get; }
     public Uri CoverImage { get; }
     public IBasicUser Seller { get; }
+    public string[] Cities { get; }
+    public DateTime CreatedAt { get; }
+    public Uri Link { get; }
 }
