@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using AngleSharp.Dom;
 using HardveraproApi.Ad;
 using HardveraproApi.Constants;
 
@@ -24,7 +25,7 @@ public class Search
     public bool HasNextPage => CurrentPage < TotalPages;
     public bool HasPreviousPage => CurrentPage > 1;
 
-    public static Search FromSearchQuery(string query, int offset = 0, int resultsPerPage = 10)
+    public static Search FromSearchQuery(string query, int offset = 0)
     {
         var builder = new UriBuilder(Routes.Search)
         {
@@ -45,6 +46,8 @@ public class Search
                 ? outTotalResults
                 : 0;
         
-        return new Search(ads, totalResults, offset, 0);
+        var resultsPerPage = int.Parse(document.QuerySelector("div:has(#forum-nav-top) ul:last-child li:first-child a b:first-child")!.TextContent);
+        
+        return new Search(ads, totalResults, offset, resultsPerPage);
     }
 }
