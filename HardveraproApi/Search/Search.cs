@@ -6,6 +6,14 @@ namespace HardveraproApi.Search;
 
 public class Search
 {
+    private Search(BasicAd[] ads, int totalResults, int offset, int resultsPerPage)
+    {
+        Ads = ads;
+        TotalResults = totalResults;
+        Offset = offset;
+        ResultsPerPage = resultsPerPage;
+    }
+
     public BasicAd[] Ads { get; }
     public int TotalResults { get; }
     public int Offset { get; }
@@ -15,33 +23,28 @@ public class Search
     public int TotalPages => (int)Math.Ceiling((double)TotalResults / ResultsPerPage);
     public bool HasNextPage => CurrentPage < TotalPages;
     public bool HasPreviousPage => CurrentPage > 1;
-    
-    private Search(BasicAd[] ads, int totalResults, int offset, int resultsPerPage)
-    {
-        Ads = ads;
-        TotalResults = totalResults;
-        Offset = offset;
-        ResultsPerPage = resultsPerPage;
-    }
-    
-    public static Search FromSearchQuery(string query)
+
+    public static Search FromSearchQuery(string query, int offset = 0, int resultsPerPage = 10)
     {
         var builder = new UriBuilder(Routes.Search)
         {
-            Query = $"stext={query}"
+            Query = $"stext={query}&offset={offset}"
         };
-        
+
         using var client = new HttpClient();
         var response = client.GetAsync(builder.Uri).Result;
         if (!response.IsSuccessStatusCode)
-        {
             throw new Exception($"Failed to fetch search results: {response.ReasonPhrase}");
-        }
         var content = response.Content.ReadAsStringAsync().Result;
         var context = BrowsingContext.New(Configuration.Default);
         var document = context.OpenAsync(req => req.Content(content)).Result;
         var ads = document.QuerySelectorAll(".uad-list li.media").Select(BasicAd.FromSearchResultElement).ToArray();
+
+        var totalResults =
+            int.TryParse(document.QuerySelector(".uad-list li")!.TextContent.Split(' ')[0], out var outTotalResults)
+                ? outTotalResults
+                : 0;
         
-        return new Search(ads, 0, 0, 0);
+        return new Search(ads, totalResults, offset, 0);
     }
 }
