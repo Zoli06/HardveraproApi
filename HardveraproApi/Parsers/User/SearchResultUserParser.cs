@@ -3,9 +3,9 @@ using HardveraproApi.Models.User;
 
 namespace HardveraproApi.Parsers.User;
 
-internal static class SearchResultUserParser
+internal class SearchResultUserParser : ParserBase<SearchResultUser>
 {
-    public static SearchResultUser Parse(IElement element)
+    public override SearchResultUser Parse(IElement element)
     {
         var name = element.QuerySelector("a")!.TextContent;
         var positiveRating = int.Parse(element.QuerySelector(".uad-rating-positive")?.TextContent.Split(' ')[0] ?? "0");

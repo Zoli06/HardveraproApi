@@ -1,14 +1,14 @@
 ﻿using AngleSharp.Dom;
+using HardveraproApi.Models.Ad;
 using HardveraproApi.Models.Search;
-using HardveraproApi.Parsers.Ad;
 
 namespace HardveraproApi.Parsers.Search;
 
-internal static class SearchResultParser
+internal class SearchResultParser(IParser<SearchResultAd> searchResultAdParser) : ParserBase<SearchResult>
 {
-    public static SearchResult Parse(IElement element)
+    public override SearchResult Parse(IElement element)
     {
-        var ads = element.QuerySelectorAll(".uad-list li.media").Select(SearchResultAdParserHelpers.Parse).ToArray();
+        var ads = element.QuerySelectorAll(".uad-list li.media").Select(searchResultAdParser.Parse).ToArray();
         var prevPage = element.QuerySelector("a[rel=\"prev\"]")?.Attributes["href"]!.Value;
         var nextPage = element.QuerySelector("a[rel=\"next\"]")?.Attributes["href"]!.Value;
 

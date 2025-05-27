@@ -3,9 +3,9 @@ using HardveraproApi.Models.Ad;
 
 namespace HardveraproApi.Parsers.Ad;
 
-internal static class AdParserHelpers
+internal abstract class AdParser<T> : ParserBase<T>
 {
-    public static AdType ParseAdType(string priceText, string? intentionText = null)
+    protected static AdType ParseAdType(string priceText, string? intentionText = null)
     {
         var hasPrice = int.TryParse(priceText, NumberStyles.Currency,
             new CultureInfo("hu-HU"), out _);
@@ -18,7 +18,7 @@ internal static class AdParserHelpers
             throw new ArgumentException("Unknown ad type");
     }
     
-    public static int? ParsePrice(string priceText)
+    protected static int? ParsePrice(string priceText)
     {
         return int.TryParse(priceText, NumberStyles.Currency, new CultureInfo("hu-HU"), out var price) 
             ? price 

@@ -1,10 +1,13 @@
 ﻿using System.Globalization;
+using AngleSharp.Dom;
 
 namespace HardveraproApi.Parsers;
 
-internal static class ParserHelpers
+internal abstract class ParserBase<T> : IParser<T>
 {
-    public static DateTimeOffset ParseDateAndTime(string raw)
+    public abstract T Parse(IElement input);
+    
+    protected static DateTimeOffset ParseDateAndTime(string raw)
     {
         var relevantPart = raw.Split().Last();
 
@@ -17,7 +20,7 @@ internal static class ParserHelpers
         return new DateTimeOffset(localtime, offset);
     }
 
-    public static TimeSpan ParseElapsedTime(string raw)
+    protected static TimeSpan ParseElapsedTime(string raw)
     {
         var parts = raw.Trim().Split(' ');
         if (parts.Length < 2) throw new ArgumentException("Invalid elapsed time format", nameof(raw));
