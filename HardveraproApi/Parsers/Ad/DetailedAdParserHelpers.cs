@@ -14,7 +14,7 @@ internal static class DetailedAdParserHelpers
         var detailsTableCells = detailsDivs[2].QuerySelectorAll("td");
         var priceText = detailsDivs[0].TextContent;
         var adType = AdParserHelpers.ParseAdType(priceText, detailsTableCells[1].TextContent);
-        var price = int.TryParse(priceText, out var priceInt) ? priceInt : (int?)null;
+        var price = AdParserHelpers.ParsePrice(priceText);
         var condition = ParseCondition(detailsTableCells[0].TextContent);
         var brand = detailsTableCells.Length > 2 ? detailsTableCells[2].TextContent : null;
         var seller = SearchResultUserParser.Parse(element.QuerySelector(".uad div:nth-child(2) table")!);

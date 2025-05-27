@@ -14,14 +14,14 @@ internal static class SearchResultAdParserHelpers
         var priceContainer = element.QuerySelector(".uad-price")!;
         var priceText = priceContainer.QuerySelector("span")!.TextContent;
         var adType = AdParserHelpers.ParseAdType(priceText);
-        var price = int.TryParse(priceText, out var priceInt) ? priceInt : (int?)null;
+        var price = AdParserHelpers.ParsePrice(priceText);
         var isFrozen = priceContainer.QuerySelectorAll("span").Length > 1;
         var coverImage = new Uri(element.QuerySelector(".uad-image img")!.GetAttribute("src")!);
         var seller = SearchResultUserParser.Parse(element.QuerySelector(".uad-user")!);
         var cities = element.QuerySelector(".uad-cities")!.TextContent.Split(", ");
         var createdAtString = element.QuerySelector(".uad-time")!.TextContent;
-        var createdAt = ParserHelpers.ParseDateAndTime(createdAtString);
         var isClassified = element.QuerySelector(".fa-sort-amount-up") != null;
+        var createdAt = isClassified ? (DateTimeOffset?)null : ParserHelpers.ParseDateAndTime(createdAtString);
 
         return new SearchResultAd
         {

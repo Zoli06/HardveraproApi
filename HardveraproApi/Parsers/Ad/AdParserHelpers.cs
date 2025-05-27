@@ -17,4 +17,11 @@ internal static class AdParserHelpers
             priceText == "Keresem" ? AdType.Wanted :
             throw new ArgumentException("Unknown ad type");
     }
+    
+    public static int? ParsePrice(string priceText)
+    {
+        return int.TryParse(priceText, NumberStyles.Currency, new CultureInfo("hu-HU"), out var price) 
+            ? price 
+            : null;
+    }
 }
